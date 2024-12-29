@@ -5,12 +5,13 @@ import MiOrg from './Componentes/MiOrg/';
 import Equipo from './Componentes/Equipo';
 
 import './App.css';
+import Colaborador from './Componentes/Colaborador';
 
 function App() {
 
   const [mostrarForm, setMostrarForm] = useState(true);
-
-  const equipos = [
+  const [colaboradores, setColaboradores] = useState([])
+  const [equipos, setEquipos] = useState([
     {
       titulo: 'Programacion',
       colorPrimario: '#D9F7E9',
@@ -47,19 +48,50 @@ function App() {
       colorSecundario: '#FF8A29',
     },
 
-  ]
-
+  ])
 
   const cambiarMostrar = () => {
     setMostrarForm(!mostrarForm);
   }
+
+  const actualizarColor = (color, titulo) => {
+    console.log("actualizar ", color, titulo)
+    const equiposActualizados = equipos.map((equipo) => {
+      if (titulo === equipo.titulo) {
+        equipo.colorSecundario = color
+
+      }
+      return equipo
+
+    })
+
+    setEquipos(equiposActualizados)
+  }
+
+  const registrarColaborador = (colaborador) => {
+    setColaboradores([...colaboradores, colaborador])
+  }
+
+
+  const eliminarColaborador = () => {
+    console.log("eliminar colaborador")
+  }
+
   return (
     <div>
       <Header />
-      {mostrarForm && <Formulario />}
+      {mostrarForm && <Formulario
+        registrarColaborador={registrarColaborador}
+        equipos={equipos.map((equipo) => equipo.titulo)} />}
       <MiOrg cambiarMostrar={cambiarMostrar} />
       {
-        equipos.map((equipo, index) => <Equipo key={index} datos={equipo}></Equipo>)
+        equipos.map((equipo, index) => <Equipo colaboradores={colaboradores.filter(colaborador => colaborador.opciones === equipo.titulo)}
+          key={index} datos={equipo}
+          eliminarColaborador={eliminarColaborador}
+          actualizarColor={actualizarColor}
+        >
+
+        </Equipo>)
       }
 
     </div>
